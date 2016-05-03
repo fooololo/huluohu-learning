@@ -2,6 +2,7 @@ package com.huluohu.learning.concurrent.atomic;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
+import java.util.Base64.Encoder;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -30,7 +31,7 @@ public class Client {
 	}
 
 	private static void test5() throws UnsupportedEncodingException {
-		Base64.Encoder encoder = Base64.getEncoder();
+		Encoder encoder = Base64.getEncoder();
 		encoder = Base64.getUrlEncoder();
 		String e = "guxiaolong";
 		String ee = encoder.encodeToString(e.getBytes("utf-8"));

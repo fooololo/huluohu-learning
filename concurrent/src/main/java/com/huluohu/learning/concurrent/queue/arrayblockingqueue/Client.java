@@ -1,7 +1,7 @@
 package com.huluohu.learning.concurrent.queue.arrayblockingqueue;
 
-import com.uml.clazz.demo.concurrent.queue.Consumer;
-import com.uml.clazz.demo.concurrent.queue.Producer;
+import com.huluohu.learning.concurrent.queue.Consumer;
+import com.huluohu.learning.concurrent.queue.Producer;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;

@@ -1,8 +1,6 @@
 package com.huluohu.learning.dp.mediator;
 
-import com.uml.clazz.demo.mediator.pojo.Purchase;
-import com.uml.clazz.demo.mediator.pojo.Sale;
-import com.uml.clazz.demo.mediator.pojo.Stock;
+
 
 /**
  * Company        :   mamahao.com
