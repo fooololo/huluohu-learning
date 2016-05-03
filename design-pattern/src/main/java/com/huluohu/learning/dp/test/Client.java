@@ -1,9 +1,7 @@
 package com.huluohu.learning.dp.test;
 
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Set;
+import java.lang.management.ClassLoadingMXBean;
+import java.lang.management.ManagementFactory;
 
 /**
  * Company        :   mamahao.com
@@ -22,13 +20,20 @@ public class Client {
 //		System.out.println(ChineseEraAndZodiacUtils.getShengXiaoIndex(1989));
 //		System.out.println(Calendar.getInstance().get(Calendar.YEAR));
 
-		Set<Integer> set = new HashSet<>();
-		set.add(1);
-		set.add(2);
-		set.add(3);
-		set.add(3);
-		set.add(1);
-		set.add(1);
-		System.out.println(Arrays.toString(set.toArray()));
+//		Set<Integer> set = new HashSet<>();
+//		set.add(1);
+//		set.add(2);
+//		set.add(3);
+//		set.add(3);
+//		set.add(1);
+//		set.add(1);
+//		System.out.println(Arrays.toString(set.toArray()));
+
+		test1();
+	}
+
+	private static void test1() {
+		ClassLoadingMXBean classLoadingMXBean = ManagementFactory.getClassLoadingMXBean();
+		System.out.println(classLoadingMXBean.getTotalLoadedClassCount());
 	}
 }
