@@ -33,7 +33,7 @@ public class ElConfig {
     @Value("#{demoService.author}")
     private String fromAuthor;
 
-    @Value("classpath:el/el.txt")
+    @Value("classpath:el/aware.txt")
     private Resource testFile;
 
     @Value("http://www.baidu.com")
