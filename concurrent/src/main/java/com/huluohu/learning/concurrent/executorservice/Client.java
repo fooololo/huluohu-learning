@@ -24,10 +24,10 @@ public class Client {
 
 	private static void scheduledThreadPoolExecutor() throws ExecutionException, InterruptedException {
 		ScheduledExecutorService  service = new ScheduledThreadPoolExecutor(5);
-		Future<String> submit = service.submit(() -> "test scheduledThreadPoolExecutor01");
+		Future<String> submit = service.submit(() -> "fortest scheduledThreadPoolExecutor01");
 		System.out.println(submit.get());
 
-		ScheduledFuture<String> schedule = service.schedule(() -> "test scheduledThreadPoolExecutor01",
+		ScheduledFuture<String> schedule = service.schedule(() -> "fortest scheduledThreadPoolExecutor01",
 				2000, TimeUnit.MILLISECONDS);
 		System.out.println(schedule.get());
 

@@ -19,6 +19,7 @@
     <properties>
         <spring.version>4.2.6.RELEASE</spring.version>
         <aspectj.version>1.8.9</aspectj.version>
+        <junit.version>4.12</junit.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -58,6 +59,11 @@
                 <version>${spring.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.aspectj</groupId>
                 <artifactId>aspectjrt</artifactId>
                 <version>${aspectj.version}</version>
@@ -82,7 +88,7 @@
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.12</version>
+                <version>${junit.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
