@@ -2,11 +2,11 @@
 <html>
 <head>
     <meta http-equiv="content-type" content="text/html" charset="UTF-8">
-    <title>Index</title>
+    <title>error</title>
 </head>
 <body>
     <pre>
-        Welcome to Spring MVC world!
+        ${errorMsg}
     </pre>
 </body>
 </html>
