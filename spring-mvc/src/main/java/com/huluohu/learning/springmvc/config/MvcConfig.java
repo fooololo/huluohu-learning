@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.*;
@@ -23,6 +24,7 @@ import java.util.List;
  */
 @Configuration
 @EnableWebMvc
+@EnableScheduling
 @ComponentScan("com.huluohu.learning.springmvc")
 public class MvcConfig extends WebMvcConfigurerAdapter{
 
@@ -49,6 +51,26 @@ public class MvcConfig extends WebMvcConfigurerAdapter{
 	}
 
 	/**
+	 * 文件上传
+	 * @return
+	 */
+	@Bean
+	public MultipartResolver multipartResolver(){
+		CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+		multipartResolver.setMaxUploadSize(1000000);
+		return multipartResolver;
+	}
+
+	/**
+	 * 自定义转换器
+	 * @return
+	 */
+	@Bean
+	public MyMessageConverter myMessageConverter(){
+		return new MyMessageConverter();
+	}
+
+	/**
 	 * 注册拦截器
 	 * @param registry
      */
@@ -65,6 +87,10 @@ public class MvcConfig extends WebMvcConfigurerAdapter{
 		registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
 	}
 
+	/**
+	 * 配置页面跳转
+	 * @param registry
+	 */
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
 		//设置页面跳转简单写法
@@ -72,30 +98,24 @@ public class MvcConfig extends WebMvcConfigurerAdapter{
 		registry.addViewController("/upload").setViewName("/upload");
 
 		registry.addViewController("/converter").setViewName("/converter");
+		registry.addViewController("/sse").setViewName("/sse");
+		registry.addViewController("/async").setViewName("/async");
 	}
 
+	/**
+	 * 配置请求路径相关
+	 * @param configurer
+	 */
 	@Override
 	public void configurePathMatch(PathMatchConfigurer configurer) {
-		//
+		//如果参数中包含".",不忽略
 		configurer.setUseSuffixPatternMatch(false);
 	}
 
 	/**
-	 * upload settings
-	 * @return
-     */
-	@Bean
-	public MultipartResolver multipartResolver(){
-		CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-		multipartResolver.setMaxUploadSize(1000000);
-		return multipartResolver;
-	}
-
-	@Bean
-	public MyMessageConverter myMessageConverter(){
-		return new MyMessageConverter();
-	}
-
+	 * 扩展消息类型
+	 * @param converters
+	 */
 	@Override
 	public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
 		converters.add(myMessageConverter());

@@ -28,5 +28,7 @@ public class WebInitializer implements WebApplicationInitializer {
 				.addServlet("dispatcher", new DispatcherServlet(context));
 		dispatcher.addMapping("/");
 		dispatcher.setLoadOnStartup(1);
+		//开启异步方法支持
+		dispatcher.setAsyncSupported(true);
 	}
 }

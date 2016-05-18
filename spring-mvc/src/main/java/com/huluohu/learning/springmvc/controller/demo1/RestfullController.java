@@ -1,6 +1,7 @@
 package com.huluohu.learning.springmvc.controller.demo1;
 
 import com.huluohu.learning.springmvc.vo.DemoObj;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/rest/")
 public class RestfullController {
 
-	@RequestMapping(value = "json",produces = {"application/json;charset=UTF-8"})
+	@RequestMapping(value = "json",produces = { MediaType.APPLICATION_JSON_UTF8_VALUE})
 	public DemoObj json(){
 		return new DemoObj(12L,"JSON");
 	}

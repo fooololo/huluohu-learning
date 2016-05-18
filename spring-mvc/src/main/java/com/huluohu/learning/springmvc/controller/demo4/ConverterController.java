@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * Created by huluohu on 2016/5/18.
  */
 @Controller
-@RequestMapping("/convert/")
+@RequestMapping("/converter/")
 public class ConverterController {
     @RequestMapping(value = "start" ,produces = {"application/x-huluohu"})
     @ResponseBody

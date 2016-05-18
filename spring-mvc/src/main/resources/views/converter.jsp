@@ -11,7 +11,7 @@
 <script>
     function req() {
         $.ajax({
-            url:"convert/start",
+            url:"converter/start",
             data:"123-xiaoming",
             type:"POST",
             contentType:"application/x-huluohu",
