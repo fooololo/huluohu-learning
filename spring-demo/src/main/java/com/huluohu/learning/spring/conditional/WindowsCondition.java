@@ -6,10 +6,16 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 
 /**
  * Created by huluohu on 2016/5/15.
+ * 条件
  */
 public class WindowsCondition implements Condition {
     @Override
     public boolean matches(ConditionContext conditionContext, AnnotatedTypeMetadata annotatedTypeMetadata) {
+
         return conditionContext.getEnvironment().getProperty("os.name").contains("Windows");
+    }
+
+    public static void main(String[] args) {
+        System.out.println("=====");
     }
 }
