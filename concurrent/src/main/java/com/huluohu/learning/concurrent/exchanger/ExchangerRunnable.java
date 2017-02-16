@@ -22,7 +22,7 @@ public class ExchangerRunnable implements Runnable {
 		try {
 			Object prev = this.object;
 			this.object = this.exchanger.exchange(this.object);
-			System.out.println(Thread.currentThread().getName() + "exchanged " + prev + "for " + this.object);
+			System.out.println(Thread.currentThread().getName() + "exchanged " + prev + " for " + this.object);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
