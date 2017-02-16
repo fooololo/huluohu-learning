@@ -22,16 +22,16 @@ public class QuickSort {
     }
 
     private static int getMiddle(int[] nums, int start, int end) {
-        int tmp = nums[start];
+        int tmp = nums[start];//数组的第一个作为中轴
         while (start < end){
             while (start < end && nums[end] >= tmp){
                 end--;
             }
-            nums[start] = nums[end];
+            nums[start] = nums[end];//比中轴小的记录移到低端
             while (start < end && nums[start] <= tmp){
                 start++;
             }
-            nums[end] = nums[start];
+            nums[end] = nums[start];//比中轴大的记录移到高端
         }
         nums[start] = tmp;
         return start;
