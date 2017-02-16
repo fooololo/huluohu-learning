@@ -23,10 +23,10 @@ import java.util.concurrent.atomic.AtomicReference;
 public class Client {
 	public static void main(String[] args) throws ExecutionException, InterruptedException,
 			UnsupportedEncodingException {
-//		test1();
-//		test2();
-//		test3();
-//		test4();
+		test1();
+		test2();
+		test3();
+		test4();
 		test5();
 	}
 
