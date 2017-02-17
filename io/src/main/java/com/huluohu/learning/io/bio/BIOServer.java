@@ -27,34 +27,37 @@ public class BIOServer {
             ServerSocket serverSocket = new ServerSocket(PORT);
             while (true){
                 Socket client = serverSocket.accept();
-                new HandlerThread(client);
+                HandlerThread handlerThread = new HandlerThread(client);
+                handlerThread.start();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private class HandlerThread implements Runnable{
+    private class HandlerThread extends Thread{
         private Socket socket;
 
         public HandlerThread(Socket socket) {
             this.socket = socket;
-            new Thread(this).start();
         }
 
         @Override
         public void run() {
             try {
                 DataInputStream in = new DataInputStream(socket.getInputStream());
-                String acceptMsg = in.readUTF();
-                System.out.println("server accept:" + acceptMsg);
-
-
                 DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-                String sendMsg = String.format("accepted[%s]",DateFormatUtils.format(new Date(),"yyyy-MM-dd HH:mm:ss"));
-                out.writeUTF(sendMsg);
-                out.close();
-                in.close();
+//                BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+
+                while (true){
+                    String acceptMsg = in.readUTF();
+                    System.out.println("server accept:" + acceptMsg);
+
+                    String sendMsg = String.format("accepted[%s]",DateFormatUtils.format(new Date(),"yyyy-MM-dd HH:mm:ss"));
+                    out.writeUTF(sendMsg);
+                    out.flush();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }finally {

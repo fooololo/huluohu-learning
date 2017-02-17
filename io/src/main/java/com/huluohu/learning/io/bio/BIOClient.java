@@ -13,22 +13,17 @@ public class BIOClient {
     public static final int PORT = 9988;//服务器端口号
     public static void main(String[] args) {
         System.out.println("client starting...");
-        Socket socket;
+        Socket socket = null;
         try {
             socket = new Socket(IP,PORT);
-
-
 
             System.out.println("请输入:\t");
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
-            DataInputStream  in;
-            DataOutputStream out;
+            DataInputStream  in = new DataInputStream (socket.getInputStream());
+            DataOutputStream out = new DataOutputStream(socket.getOutputStream());
             String line = reader.readLine();
             while (true){
-                in = new DataInputStream (socket.getInputStream());
-                out = new DataOutputStream(socket.getOutputStream());
-
                 if(StringUtils.isNotBlank(line)){
                     out.writeUTF(line);
 
@@ -39,6 +34,15 @@ public class BIOClient {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }finally {
+            if(socket != null){
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    socket = null;
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }
