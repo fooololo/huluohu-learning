@@ -10,12 +10,15 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.Charset;
 import java.util.Date;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by Administrator on 2017/2/17.
  */
 public class BIOServer {
     public static final int PORT = 9988;
+    public static final ExecutorService es = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     public static void main(String[] args) {
         System.out.println("server bind in "+ PORT + " ...");
         BIOServer server = new BIOServer();
@@ -28,7 +31,7 @@ public class BIOServer {
             while (true){
                 Socket client = serverSocket.accept();
                 HandlerThread handlerThread = new HandlerThread(client);
-                handlerThread.start();
+                es.submit(handlerThread);
             }
         } catch (IOException e) {
             e.printStackTrace();
