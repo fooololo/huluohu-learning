@@ -48,6 +48,7 @@ public class BIOServer {
                 DataInputStream in = new DataInputStream(socket.getInputStream());
                 DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 //                BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+//                PrintWriter writer = new PrintWriter(socket.getOutputStream());
 
 
                 while (true){
