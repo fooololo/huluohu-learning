@@ -24,6 +24,7 @@ public class NIOServer {
             channel.register(selector, SelectionKey.OP_ACCEPT);
 
             while (selector.select() > 0){
+                System.out.println(System.currentTimeMillis());
                 Set<SelectionKey> keys = selector.selectedKeys();
                 Iterator<SelectionKey> iterator = keys.iterator();
                 while (iterator.hasNext()){
