@@ -11,8 +11,8 @@ import java.util.logging.Logger;
 /**
  * Created by Administrator on 2017/2/20.
  */
-public class Processor {
-    private static final Logger LOGGER = Logger.getLogger(Processor.class.getName());
+public class ThreadProcessor {
+    private static final Logger LOGGER = Logger.getLogger(ThreadProcessor.class.getName());
     private static final ExecutorService es = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
     public void process(SelectionKey key){

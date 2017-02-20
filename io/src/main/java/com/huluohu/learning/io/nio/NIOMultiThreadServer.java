@@ -1,6 +1,6 @@
 package com.huluohu.learning.io.nio;
 
-import com.huluohu.learning.io.nio.support.Processor;
+import com.huluohu.learning.io.nio.support.ThreadProcessor;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -42,9 +42,9 @@ public class NIOMultiThreadServer {
                         LOGGER.info(String.format("Accept request from %s",socketChannel.getRemoteAddress()));
 
                         SelectionKey readKey = socketChannel.register(selector, SelectionKey.OP_READ);
-                        readKey.attach(new Processor());
+                        readKey.attach(new ThreadProcessor());
                     }else if(key.isReadable()){
-                        Processor processor = (Processor) key.attachment();
+                        ThreadProcessor processor = (ThreadProcessor) key.attachment();
                         processor.process(key);
                     }
 
