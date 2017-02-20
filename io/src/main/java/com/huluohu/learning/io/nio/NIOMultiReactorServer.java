@@ -1,10 +1,15 @@
 package com.huluohu.learning.io.nio;
 
+import com.huluohu.learning.io.nio.support.ReactorProcessor;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.logging.Logger;
 
 /**
@@ -12,7 +17,7 @@ import java.util.logging.Logger;
  */
 public class NIOMultiReactorServer {
     public static final int PORT = 9988;
-    private static final Logger LOGGER = Logger.getLogger(NIOMultiThreadServer.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(NIOMultiReactorServer.class.getName());
     public static void main(String[] args) {
         try {
             Selector selector = Selector.open();
@@ -22,8 +27,28 @@ public class NIOMultiReactorServer {
             serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
 
-            int processors = Runtime.getRuntime().availableProcessors();
+            int processorCount = Runtime.getRuntime().availableProcessors() -2;
+            ReactorProcessor[] processors = new ReactorProcessor[processorCount];
+            for (int i = 0; i < processors.length; i++) {
+                processors[i] = new ReactorProcessor();
+            }
 
+            int index = 0;
+            while (selector.select() > 0){
+                Set<SelectionKey> selectionKeys = selector.selectedKeys();
+                Iterator<SelectionKey> iterator = selectionKeys.iterator();
+                while (iterator.hasNext()){
+                    SelectionKey key = iterator.next();
+                    iterator.remove();
+                    if(key.isAcceptable()){
+                        ServerSocketChannel acceptServerSocketChannel = (ServerSocketChannel) key.channel();
+                        SocketChannel socketChannel = acceptServerSocketChannel.accept();
+                        LOGGER.info(String.format("Accept Request From %s",socketChannel.getRemoteAddress()));
+                        ReactorProcessor processor = processors[(index++) / processorCount];
+                        processor.addChannel(socketChannel);
+                    }
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
