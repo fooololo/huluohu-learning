@@ -15,9 +15,9 @@ import java.util.logging.Logger;
 /**
  * Created by Administrator on 2017/2/20.
  */
-public class NIOMuiltThreadServer {
+public class NIOMultiThreadServer {
     public static final int PORT = 9988;
-    private static final Logger LOGGER = Logger.getLogger(NIOMuiltThreadServer.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(NIOMultiThreadServer.class.getName());
     public static void main(String[] args) {
         try {
             Selector selector = Selector.open();
