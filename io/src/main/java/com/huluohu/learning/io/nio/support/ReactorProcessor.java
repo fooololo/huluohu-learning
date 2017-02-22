@@ -42,7 +42,6 @@ public class ReactorProcessor {
                 Iterator<SelectionKey> iterator = selectionKeys.iterator();
                 while (iterator.hasNext()){
                     SelectionKey key = iterator.next();
-                    iterator.remove();
                     if(key.isAcceptable()){
                         ByteBuffer buffer = ByteBuffer.allocate(1024);
                         SocketChannel socketChannel = (SocketChannel) key.channel();
@@ -59,6 +58,7 @@ public class ReactorProcessor {
                             LOGGER.info(String.format("%s \\t Read Message : %s",socketChannel, new String(buffer.array())));
                         }
                     }
+                    iterator.remove();
                 }
             }
         });
