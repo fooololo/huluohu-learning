@@ -24,8 +24,7 @@ public class NIOMultiReactorServer {
             ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
             serverSocketChannel.configureBlocking(false);
             serverSocketChannel.bind(new InetSocketAddress(PORT));
-            serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
-
+            SelectionKey selectionKey = serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
             int processorCount = Runtime.getRuntime().availableProcessors() -2;
             ReactorProcessor[] processors = new ReactorProcessor[processorCount];
