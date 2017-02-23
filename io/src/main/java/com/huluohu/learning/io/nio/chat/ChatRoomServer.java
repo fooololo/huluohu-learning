@@ -98,9 +98,10 @@ public class ChatRoomServer {
             //响应客户端
             int size = channels.size();
             for (int i = 0; i < size; i++) {
-                if(!readSocketChannel.equals(channels.get(i))){
-                    channels.get(i).write(buffer);
-                }
+//                if(!readSocketChannel.equals(channels.get(i))){
+//
+//                }
+                channels.get(i).write(buffer);
             }
         }
 
