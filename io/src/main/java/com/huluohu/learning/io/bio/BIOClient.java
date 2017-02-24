@@ -10,7 +10,7 @@ import java.net.Socket;
  */
 public class BIOClient {
     public static final String IP = "localhost";//服务器地址
-    public static final int PORT = 9988;//服务器端口号
+    public static final int PORT = 9999;//服务器端口号
     public static void main(String[] args) {
         System.out.println("client starting...");
         Socket socket = null;
