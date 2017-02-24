@@ -14,7 +14,7 @@ import java.util.Set;
  * Created by Administrator on 2017/2/17.
  */
 public class NIOServer {
-    public static final int PORT = 9988;
+    public static final int PORT = 9999;
     public static void main(String[] args) {
         try {
             Selector selector = Selector.open();
