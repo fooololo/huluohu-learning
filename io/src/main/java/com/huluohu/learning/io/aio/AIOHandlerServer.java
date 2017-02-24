@@ -44,23 +44,23 @@ public class AIOHandlerServer {
     }
 
     private void doAccept(AsynchronousServerSocketChannel server) {
-        server.accept(null, new CompletionHandler<AsynchronousSocketChannel, Object>() {
+        server.accept(null, new CompletionHandler<AsynchronousSocketChannel, Void>() {
             final ByteBuffer buf = ByteBuffer.allocate(1024);
             @Override
-            public void completed(AsynchronousSocketChannel client, Object attachment) {
+            public void completed(AsynchronousSocketChannel client, Void attachment) {
                 server.accept(null,this);
                 doRead(client,attachment);
             }
 
             @Override
-            public void failed(Throwable exc, Object attachment) {
+            public void failed(Throwable exc, Void attachment) {
                 System.err.println(String.format("Failed accept:%s",exc));
             }
         });
         System.out.println(String.format("server Listening on %d",PORT));
     }
 
-    private void doRead(AsynchronousSocketChannel client, Object attachment) {
+    private void doRead(AsynchronousSocketChannel client, Void attachment) {
         System.out.println(Thread.currentThread().getName());
         ByteBuffer buf = ByteBuffer.allocate(1024);
         client.read(buf, buf, new CompletionHandler<Integer, ByteBuffer>() {
@@ -83,7 +83,7 @@ public class AIOHandlerServer {
 
                 System.out.println(String.format("server read message:%s",message));
 
-                ByteBuffer response = ByteBuffer.wrap(String.format("server accepted :%s",message).getBytes());
+                ByteBuffer response = ByteBuffer.wrap("server accepted".getBytes());
                 doWrite(client,response,response);
                 System.out.println("============================end==========================");
             }
@@ -93,31 +93,6 @@ public class AIOHandlerServer {
                 System.err.println(String.format("Failed read:%s",exc));
             }
         });
-
-
-//        try {
-//            buf.clear();
-//            Future<Integer> future = client.read(buf);
-//            Integer count = future.get(100, TimeUnit.SECONDS);
-//            buf.flip();
-//
-//            String message = new String(buf.array(), 0, count);
-//            System.out.println(String.format("server accept message:%s",message));
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        } catch (ExecutionException e) {
-//            e.printStackTrace();
-//        } catch (TimeoutException e) {
-//            e.printStackTrace();
-//        }finally {
-//            try {
-//                client.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-
-
     }
 
     private void doWrite(AsynchronousSocketChannel client, ByteBuffer response, ByteBuffer attachment) {
