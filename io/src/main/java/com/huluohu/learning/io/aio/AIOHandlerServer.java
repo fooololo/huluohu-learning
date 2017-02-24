@@ -22,7 +22,7 @@ public class AIOHandlerServer {
 
     public static void main(String[] args) throws IOException {
         AIOHandlerServer server = new AIOHandlerServer();
-        server.startWithHandler();
+        server.start();
     }
 
 
@@ -33,7 +33,7 @@ public class AIOHandlerServer {
 
 
 
-    public void startWithHandler() {
+    public void start() {
         doAccept(server);
         try {
             channelGroup.awaitTermination(Integer.MAX_VALUE,TimeUnit.DAYS);
