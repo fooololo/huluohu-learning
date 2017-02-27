@@ -88,7 +88,7 @@ public class ChatRoomServer {
             ServerSocketChannel serverChannel = (ServerSocketChannel) key.channel();
             SocketChannel clientChannel = serverChannel.accept();
             clientChannel.configureBlocking(false);
-            clientChannel.register(selector,SelectionKey.OP_READ);
+            clientChannel.register(selector,SelectionKey.OP_READ,ByteBuffer.allocate(1024));
             channels.add(clientChannel);
         }
 
@@ -99,16 +99,25 @@ public class ChatRoomServer {
          * @throws IOException
          */
         private void doRead(SelectionKey key, Selector selector) throws IOException {
-            ByteBuffer buf = ByteBuffer.allocate(256);
+            ByteBuffer buf = (ByteBuffer) key.attachment();
             SocketChannel clientChannel = (SocketChannel) key.channel();
             String msg;
-            while (clientChannel.read(buf) > 0){
+            buf.clear();
+            StringBuffer sb = new StringBuffer();
+            int read = clientChannel.read(buf);
+            while (read > 0){
                 buf.flip();
-                msg = new String(buf.array());
+                msg = new String(buf.array(),0,read);
                 System.out.println(String.format("server accept message:%s",msg));
+                sb.append(msg);
                 buf.clear();
-                write(key,msg);
+                read = clientChannel.read(buf);
+//                write(key,msg);
             }
+            buf.put(String.format("游客: %d \r\n %s",clientChannel.hashCode(),sb.toString()).getBytes());
+            sb.setLength(0);
+            key.interestOps(SelectionKey.OP_READ | SelectionKey.OP_WRITE);
+
         }
 
         /**
@@ -118,10 +127,10 @@ public class ChatRoomServer {
          */
         private void doWrite(SelectionKey key, Selector selector) throws IOException {
             SocketChannel clientChannel = (SocketChannel) key.channel();
-            String msg = String.format("游客 %d \r\n %s",clientChannel.hashCode(),"how are you?");
-            byte[] response = msg.getBytes();
-            ByteBuffer buffer = ByteBuffer.allocate(response.length);
-            buffer.put(response);
+            ByteBuffer buffer = (ByteBuffer) key.attachment();
+//            String msg = String.format("游客 %d \r\n %s",clientChannel.hashCode(),"how are you?");
+//            byte[] response = msg.getBytes();
+//            buffer.put(response);
             buffer.flip();
 
             //响应客户端
@@ -132,6 +141,7 @@ public class ChatRoomServer {
 //                }
                 channels.get(i).write(buffer);
             }
+            key.interestOps(key.interestOps() &~ SelectionKey.OP_WRITE);
         }
 
         /**
