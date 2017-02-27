@@ -1,11 +1,15 @@
 package com.huluohu.learning.io.nio;
 
+import org.apache.commons.lang3.time.DateFormatUtils;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -19,7 +23,7 @@ public class UDPServer {
         server.configureBlocking(false);
         server.bind(new InetSocketAddress(PORT));
         Selector selector = Selector.open();
-        server.register(selector, SelectionKey.OP_ACCEPT);
+        server.register(selector, SelectionKey.OP_READ);
 
 
         ByteBuffer buffer = ByteBuffer.allocate(1024);
@@ -32,7 +36,20 @@ public class UDPServer {
                     SelectionKey selectionKey = iterator.next();
                     iterator.remove();
                     if(selectionKey.isReadable()){
+                        DatagramChannel client = (DatagramChannel) selectionKey.channel();
+                        buffer.clear();
+                        //读数据
+                        SocketAddress address = client.receive(buffer);
+                        String message = new String(buffer.array());
+                        System.out.println(String.format("server accept:%s",message));
 
+
+                        //写数据
+                        buffer.clear();
+                        String response = String.format("server accepted:%s", DateFormatUtils.format(new Date(),"yyyy-MM-dd HH:mm:ss"));
+                        buffer.put(response.getBytes());
+                        buffer.flip();
+                        client.send(buffer,address);
                     }
                 }
             }
