@@ -68,12 +68,14 @@ public class ChatRoomServer {
                     doRead(key,selector);
                     break;
                 case SelectionKey.OP_WRITE:
-
+                    doWrite(key,selector);
                 case SelectionKey.OP_CONNECT:
                     doConnect(key,selector);
                     break;
             }
         }
+
+
 
 
         /**
@@ -106,6 +108,29 @@ public class ChatRoomServer {
                 System.out.println(String.format("server accept message:%s",msg));
                 buf.clear();
                 write(key,msg);
+            }
+        }
+
+        /**
+         * 写数据
+         * @param key
+         * @param selector
+         */
+        private void doWrite(SelectionKey key, Selector selector) throws IOException {
+            SocketChannel clientChannel = (SocketChannel) key.channel();
+            String msg = String.format("游客 %d \r\n %s",clientChannel.hashCode(),"how are you?");
+            byte[] response = msg.getBytes();
+            ByteBuffer buffer = ByteBuffer.allocate(response.length);
+            buffer.put(response);
+            buffer.flip();
+
+            //响应客户端
+            int size = channels.size();
+            for (int i = 0; i < size; i++) {
+//                if(!readSocketChannel.equals(channels.get(i))){
+//
+//                }
+                channels.get(i).write(buffer);
             }
         }
 
