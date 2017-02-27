@@ -97,7 +97,7 @@ public class ChatRoomServer {
          * @throws IOException
          */
         private void doRead(SelectionKey key, Selector selector) throws IOException {
-            ByteBuffer buf = ByteBuffer.allocate(1024);
+            ByteBuffer buf = ByteBuffer.allocate(256);
             SocketChannel clientChannel = (SocketChannel) key.channel();
             String msg;
             while (clientChannel.read(buf) > 0){
@@ -105,7 +105,7 @@ public class ChatRoomServer {
                 msg = new String(buf.array());
                 System.out.println(String.format("server accept message:%s",msg));
                 buf.clear();
-                doWrite(key,msg);
+                write(key,msg);
             }
         }
 
@@ -123,7 +123,7 @@ public class ChatRoomServer {
          * @param key
          * @param msg
          */
-        private void doWrite(SelectionKey key, String msg) throws IOException {
+        private void write(SelectionKey key, String msg) throws IOException {
             SocketChannel clientChannel = (SocketChannel) key.channel();
             msg = String.format("游客 %d \r\n %s",clientChannel.hashCode(),msg);
             byte[] response = msg.getBytes();
