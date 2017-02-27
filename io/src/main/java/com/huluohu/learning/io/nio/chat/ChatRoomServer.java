@@ -112,7 +112,6 @@ public class ChatRoomServer {
                 sb.append(msg);
                 buf.clear();
                 read = clientChannel.read(buf);
-//                write(key,msg);
             }
             buf.put(String.format("游客: %d \r\n %s",clientChannel.hashCode(),sb.toString()).getBytes());
             sb.setLength(0);
@@ -128,9 +127,6 @@ public class ChatRoomServer {
         private void doWrite(SelectionKey key, Selector selector) throws IOException {
             SocketChannel clientChannel = (SocketChannel) key.channel();
             ByteBuffer buffer = (ByteBuffer) key.attachment();
-//            String msg = String.format("游客 %d \r\n %s",clientChannel.hashCode(),"how are you?");
-//            byte[] response = msg.getBytes();
-//            buffer.put(response);
             buffer.flip();
 
             //响应客户端
