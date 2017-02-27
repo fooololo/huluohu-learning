@@ -19,10 +19,10 @@ public class ChatRoomServer {
 
     public static void main(String[] args) throws IOException {
         ChatRoomServer server = new ChatRoomServer();
-        server.init();
+        server.start();
     }
 
-    public void init() throws IOException {
+    private void init() throws IOException {
         selector = Selector.open();
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
         serverSocketChannel.bind(new InetSocketAddress(PORT));
@@ -31,6 +31,11 @@ public class ChatRoomServer {
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
         System.out.println("server is listening on " + PORT + "...");
 
+
+    }
+
+    public void start() throws IOException {
+        init();
         HandlerSelectionKey handler = new HandlerSelectorKeyImpl();
         while (true){
             int acceptCount = selector.select();
@@ -57,39 +62,70 @@ public class ChatRoomServer {
             int keyState = selectionKeyState(key);
             switch (keyState){
                 case SelectionKey.OP_ACCEPT:
-                    ServerSocketChannel acceptServerSocketChannel = (ServerSocketChannel) key.channel();
-                    accept(acceptServerSocketChannel,selector);
+                    doAccept(key,selector);
                     break;
                 case SelectionKey.OP_READ:
-                    SocketChannel readSocketChannel = (SocketChannel) key.channel();
-                    read(readSocketChannel,selector);
+                    doRead(key,selector);
+                    break;
+                case SelectionKey.OP_WRITE:
+
+                case SelectionKey.OP_CONNECT:
+                    doConnect(key,selector);
                     break;
             }
         }
 
+
         /**
-         * 读取客户端发生过来的数据
-         * @param readSocketChannel
+         * 接收连接
+         * @param key
          * @param selector
+         * @throws IOException
          */
-        private void read(SocketChannel readSocketChannel, Selector selector) throws IOException {
-            ByteBuffer buf = ByteBuffer.allocate(8192);
-            int read = readSocketChannel.read(buf);
-            String msg = "";
-            if(read > 0){
-                msg = new String(buf.array(),0,read);
-                System.out.println(String.format("server accept message:%s",msg));
-            }
-            write(readSocketChannel,msg);
+        private void doAccept(SelectionKey key, Selector selector) throws IOException {
+            ServerSocketChannel serverChannel = (ServerSocketChannel) key.channel();
+            SocketChannel clientChannel = serverChannel.accept();
+            clientChannel.configureBlocking(false);
+            clientChannel.register(selector,SelectionKey.OP_READ);
+            channels.add(clientChannel);
         }
+
+        /**
+         * 读取数据
+         * @param key
+         * @param selector
+         * @throws IOException
+         */
+        private void doRead(SelectionKey key, Selector selector) throws IOException {
+            ByteBuffer buf = ByteBuffer.allocate(1024);
+            SocketChannel clientChannel = (SocketChannel) key.channel();
+            String msg;
+            while (clientChannel.read(buf) > 0){
+                buf.flip();
+                msg = new String(buf.array());
+                System.out.println(String.format("server accept message:%s",msg));
+                buf.clear();
+                doWrite(key,msg);
+            }
+        }
+
+        /**
+         * 建立连接
+         * @param key
+         */
+        private void doConnect(SelectionKey key, Selector selector) {
+            System.out.println("Server connected!");
+        }
+
 
         /**
          * 响应客户端请求
-         * @param readSocketChannel
+         * @param key
          * @param msg
          */
-        private void write(SocketChannel readSocketChannel, String msg) throws IOException {
-            msg = String.format("游客 %d \r\n %s",readSocketChannel.hashCode(),msg);
+        private void doWrite(SelectionKey key, String msg) throws IOException {
+            SocketChannel clientChannel = (SocketChannel) key.channel();
+            msg = String.format("游客 %d \r\n %s",clientChannel.hashCode(),msg);
             byte[] response = msg.getBytes();
             ByteBuffer buffer = ByteBuffer.allocate(response.length);
             buffer.put(response);
@@ -106,20 +142,6 @@ public class ChatRoomServer {
         }
 
         /**
-         * 接收客户端请求
-         * @param serverSocketChannel
-         * @param selector
-         */
-        private void accept(ServerSocketChannel serverSocketChannel, Selector selector) throws IOException {
-            SocketChannel socketChannel = serverSocketChannel.accept();
-            socketChannel.configureBlocking(false);
-            channels.add(socketChannel);
-
-            //注册读事件
-            socketChannel.register(selector,SelectionKey.OP_READ);
-        }
-
-        /**
          * 获取SelectionKey的事件类型
          * @param key
          * @return
@@ -129,6 +151,10 @@ public class ChatRoomServer {
                 return SelectionKey.OP_ACCEPT;
             }else if(key.isReadable()){
                 return SelectionKey.OP_READ;
+            }else if(key.isWritable()){
+                return SelectionKey.OP_WRITE;
+            }else if(key.isConnectable()){
+                return SelectionKey.OP_CONNECT;
             }
             return -1;
         }
