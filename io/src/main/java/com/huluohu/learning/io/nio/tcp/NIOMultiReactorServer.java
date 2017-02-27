@@ -1,13 +1,10 @@
-package com.huluohu.learning.io.nio;
+package com.huluohu.learning.io.nio.tcp;
 
-import com.huluohu.learning.io.nio.support.ThreadProcessor;
+import com.huluohu.learning.io.nio.support.ReactorProcessor;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
+import java.nio.channels.*;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -15,21 +12,25 @@ import java.util.logging.Logger;
 /**
  * Created by Administrator on 2017/2/20.
  */
-public class NIOMultiThreadServer {
+public class NIOMultiReactorServer {
     public static final int PORT = 9988;
-    private static final Logger LOGGER = Logger.getLogger(NIOMultiThreadServer.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(NIOMultiReactorServer.class.getName());
     public static void main(String[] args) {
         try {
             Selector selector = Selector.open();
             ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
             serverSocketChannel.configureBlocking(false);
             serverSocketChannel.bind(new InetSocketAddress(PORT));
-            serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+            SelectionKey selectionKey = serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
-            while (true){
-                if(selector.selectNow() < 0){
-                    continue;
-                }
+            int processorCount = Runtime.getRuntime().availableProcessors() -2;
+            ReactorProcessor[] processors = new ReactorProcessor[processorCount];
+            for (int i = 0; i < processors.length; i++) {
+                processors[i] = new ReactorProcessor();
+            }
+
+            int index = 0;
+            while (selector.select() > 0){
                 Set<SelectionKey> selectionKeys = selector.selectedKeys();
                 Iterator<SelectionKey> iterator = selectionKeys.iterator();
                 while (iterator.hasNext()){
@@ -38,16 +39,10 @@ public class NIOMultiThreadServer {
                     if(key.isAcceptable()){
                         ServerSocketChannel acceptServerSocketChannel = (ServerSocketChannel) key.channel();
                         SocketChannel socketChannel = acceptServerSocketChannel.accept();
-                        socketChannel.configureBlocking(false);
-                        LOGGER.info(String.format("Accept request from %s",socketChannel.getRemoteAddress()));
-
-                        SelectionKey readKey = socketChannel.register(selector, SelectionKey.OP_READ);
-                        readKey.attach(new ThreadProcessor());
-                    }else if(key.isReadable()){
-                        ThreadProcessor processor = (ThreadProcessor) key.attachment();
-                        processor.process(key);
+                        LOGGER.info(String.format("Accept Request From %s",socketChannel.getRemoteAddress()));
+                        ReactorProcessor processor = processors[(index++) / processorCount];
+                        processor.addChannel(socketChannel);
                     }
-
                 }
             }
         } catch (IOException e) {
