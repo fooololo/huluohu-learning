@@ -16,6 +16,7 @@
         <module>spring-mvc</module>
         <module>sort</module>
         <module>io</module>
+        <module>retryer</module>
     </modules>
     <properties>
         <spring.version>4.2.6.RELEASE</spring.version>
