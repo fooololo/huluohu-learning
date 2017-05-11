@@ -46,3 +46,15 @@ fabric.properties
 
 # Created by .ignore support plugin (hsz.mobi)
 *.iml
+concurrent/target/
+design-pattern/target/
+io/src/main/resources/
+io/src/test/
+io/target/
+sort/src/main/resources/
+sort/src/test/
+sort/target/
+spring-demo/target/
+spring-mvc/target/
+test/target/
+utils/target/
