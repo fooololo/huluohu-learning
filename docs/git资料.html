@@ -1,0 +1,16 @@
+<h2>服务器</h2>
+
+<pre><code>地址：http://192.168.10.23
+账号：与每个人的svn账号相同  </code></pre>
+
+<blockquote><p>服务端有两个群组，分别是mamahao-server-middleware和mamahao-server。
+    前者是项目开发中用到的自研类库、框架、中间件和扩展等，后者是业务系统群组，目前包含用户服务系统、搜索服务系统和配置仓库。  </p></blockquote>
+
+<h4>mamahao-server-middleware群组</h4>
+
+<ol><li>mamahao-data-framework<br/>妈妈好基于spring boot开发的数据组件集成库，现在支持mybatis、JPA、redis、memcached、elasticsearch、mongodb和基于redis或memcached的cache。目前
+    活动系统、配送系统、用户服务系统和搜索服务系统在使用。</li><li>mamahao-framework<br/>妈妈好传统spring项目集成redis、mongodb、memcahced、mybatis等依赖库，目前电商项目在使用。</li><li>mamahao-logger<br/>妈妈好基于es+kafka+logback开发的logger日志库，目前所有项目都在使用。</li><li>mamahao-boot-starter-webapi<br/>集成swagger2,用于项目自动生成webapi页面的集成插件。</li><li>mamahao-feign-extension<br/>spring cloud项目集成Feign时配置和VO基础类库。</li><li>mamahao-boot-starter-monitor-extension<br/>spring boot/cloud 应用监控Metrics扩展。</li><li>mamahao-message<br/>妈妈好消息库，支持发邮件、发短信和发送ONS消息。</li><li>mamahao-discovery-server<br/>注册/发现服务，用于服务注册、服务发现、状态检查等。</li><li>mamahao-config-server<br/>配置服务，用于提供配置管理。</li><li>mamahao-turbine-server<br/>事件流聚合服务（尚未使用）。</li><li>mamahao-monitor-server<br/>spring boot/cloud应用监控服务（尚未使用）。</li></ol>
+
+<h4>mamahao-server群组</h4>
+
+<ol><li>mamahao-ebiz-user<br/>妈妈好用户服务系统。</li><li>mamahao-search<br/>妈妈好搜索服务系统。</li><li>mamahao-config-server-repo<br/>业务系统配置仓库，目前包含活动系统、配送系统、用户服务系统和搜索系统的配置。</li></ol>
