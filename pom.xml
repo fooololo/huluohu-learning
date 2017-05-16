@@ -19,6 +19,8 @@
         <module>retryer</module>
         <module>state-machine</module>
         <module>sharding</module>
+        <module>property-source-loader</module>
+        <module>algorithm</module>
     </modules>
     <properties>
         <spring.version>4.2.6.RELEASE</spring.version>
